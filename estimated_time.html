@@ -54,7 +54,7 @@
         <td><input type="date" name="date" id="date"></td>
     </tr>
     <table>
-        <input id="update" type="button" onclick="estimateDate(weeks=expTimeinWeeks.value, date=date.value);  console.log('Form: ' + date.value);" value="Update"><br>
+        <input id="update" type="button" onclick="estimateDate(weeks=expTimeinWeeks.value, date=date.value, form=1);" value="Update"><br>
     </form>
     <br>
     <table>
@@ -68,19 +68,21 @@
 </div>
 <script>
     // Create function to change date.
-    function estimateDate(weeks=14, date=now) {
-	console.log("Input:  " + date);
-
-        // create new variable 'estimate' with current date
-        var estimate = new Date(date);
-        console.log("Estimate:  " + estimate);
+    function estimateDate(weeks=14, date=now, form) {
+        // if statement to determine if the function is from the form or page load call.
+        // create new variable 'estimate' with current date + EST timezone, otherwise
+        // it defaults to a prior timezone and is a day behind
+        if (form === 1) {
+            var estimate = new Date(date + " 00:00:00 GMT-0500 (Eastern Standard Time)");
+        } else {
+            var estimate = new Date(date);  
+        };
 
         // Convert to days
         var inDays = weeks * 7
 
-        // Modify variable 'now' to be (current date time)+(expWeeks variable * 7)
+        // modify estimate variable to be the date + days
         estimate.setDate(estimate.getDate()+inDays);
-        console.log("Modified:  " + estimate);
     
         // Modify DOM 'expTime' with the updated date and return it.
         return document.getElementById("expTime").innerHTML = estimate.toDateString(); 
@@ -95,7 +97,7 @@
     // Modify DOM 'today' with the current date and time.
     document.getElementById("today").innerHTML = now.toDateString();
 
-    estimateDate(expWeeks, now);
+    estimateDate(expWeeks, date=now);
 </script>
 </body>
 </html>
